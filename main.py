@@ -136,6 +136,7 @@ def get_machines_by_line(idline):
             MachineName AS name
         FROM machine
         WHERE LineID = %s
+        AND IsActive = 1
     """, (idline,))
 
     rows = cursor.fetchall()
@@ -924,7 +925,7 @@ def get_line_day(line_id):
             SUM(dv.Others)            AS Others
         FROM sdvn.dayvalues dv
         JOIN sdvn.machine m ON dv.MachineID = m.MachineID
-        WHERE m.LineID = %s AND dv.Days = %s
+        WHERE m.LineID = %s AND dv.Days = %s AND IsActive = 1
         GROUP BY dv.Days
         LIMIT 1
         """,
@@ -1020,7 +1021,7 @@ def get_line_day(line_id):
             SUM(po.totalproduct_ng)     AS TotalNG
         FROM production_output po
         JOIN machine m ON po.machineid = m.MachineID
-        WHERE po.days = %s AND m.LineID = %s
+        WHERE po.days = %s AND m.LineID = %s AND IsActive = 1
         """,
         (day, line_id),
     )
@@ -1081,7 +1082,7 @@ def get_line_month_ratio(line_id):
             AVG(dv.ActivityRatio)  AS ActivityRatio
         FROM sdvn.dayvalues dv
         JOIN sdvn.machine m ON dv.MachineID = m.MachineID
-        WHERE m.LineID = %s
+        WHERE m.LineID = %s AND IsActive = 1
           AND MONTH(dv.Days) = %s
           AND YEAR(dv.Days) = %s
         GROUP BY dv.Days
@@ -1177,7 +1178,7 @@ def get_line_month_time(line_id):
             SUM(dv.Others)            AS Others
         FROM sdvn.dayvalues dv
         JOIN sdvn.machine m ON dv.MachineID = m.MachineID
-        WHERE m.LineID = %s
+        WHERE m.LineID = %s AND IsActive = 1
           AND MONTH(dv.Days) = %s
           AND YEAR(dv.Days) = %s
         GROUP BY dv.Days
@@ -1309,7 +1310,7 @@ def export_line_month_excel(line_id):
             SUM(dv.Others)            AS Others
         FROM sdvn.dayvalues dv
         JOIN sdvn.machine m ON dv.MachineID = m.MachineID
-        WHERE m.LineID = %s
+        WHERE m.LineID = %s AND IsActive = 1
           AND MONTH(dv.Days) = %s
           AND YEAR(dv.Days) = %s
         GROUP BY dv.Days
@@ -1486,7 +1487,7 @@ def get_line_year_ratio(line_id):
             AVG(dv.ActivityRatio)  AS avg_activity
         FROM sdvn.dayvalues dv
         JOIN machine m ON dv.MachineID = m.MachineID
-        WHERE m.LineID = %s AND YEAR(dv.Days) = %s
+        WHERE m.LineID = %s AND YEAR(dv.Days) = %s AND IsActive = 1
         GROUP BY MONTH(dv.Days)
         ORDER BY m
         """,
@@ -1571,7 +1572,7 @@ def get_line_year_time(line_id):
             SUM(dv.Others)             AS oth
         FROM sdvn.dayvalues dv
         JOIN machine m ON dv.MachineID = m.MachineID
-        WHERE m.LineID = %s
+        WHERE m.LineID = %s AND IsActive = 1
           AND YEAR(dv.Days) = %s
         GROUP BY MONTH(dv.Days)
         ORDER BY m
@@ -1687,7 +1688,7 @@ def export_line_year_excel(line_id):
             SUM(dv.Others)             AS sum_oth
         FROM sdvn.dayvalues dv
         JOIN machine m ON dv.MachineID = m.MachineID
-        WHERE m.LineID = %s
+        WHERE m.LineID = %s AND IsActive = 1
           AND YEAR(dv.Days) = %s
         GROUP BY MONTH(dv.Days)
         ORDER BY m
@@ -2309,7 +2310,7 @@ def get_day_plans():
         SELECT dv.idplan_production
         FROM plan_production dv 
         JOIN machine m ON dv.MachineID = m.MachineID
-        WHERE m.LineID = %s
+        WHERE m.LineID = %s AND IsActive = 1
           AND dv.Days = %s
     """, (idline, date))
 
@@ -2358,7 +2359,7 @@ def get_day_plans():
         FROM plan_production dv
         JOIN machine m ON dv.MachineID = m.MachineID
         JOIN productionline pl ON m.LineID = pl.LineID
-        WHERE m.LineID = %s
+        WHERE m.LineID = %s AND IsActive = 1
           AND dv.Days = %s
     """
 
@@ -2562,7 +2563,7 @@ def get_month_plans():
         FROM plan_production dv
         JOIN machine m ON dv.MachineID = m.MachineID
         JOIN productionline pl ON m.LineID = pl.LineID
-        WHERE m.LineID = %s
+        WHERE m.LineID = %s AND IsActive = 1
           AND YEAR(dv.Days) = %s
           AND MONTH(dv.Days) = %s
     """
